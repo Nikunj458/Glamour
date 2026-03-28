@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html {
+    scroll-behavior: smooth;
+    /* Prevent font size inflation on iOS */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply font-sans text-charcoal bg-ivory antialiased;
+    font-feature-settings: "kern" 1, "liga" 1;
+    /* Reserve space for bottom nav on mobile */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  h1, h2, h3, h4, h5 {
+    @apply font-display;
+  }
+
+  /* Smooth momentum scrolling on iOS */
+  .scroll-smooth { -webkit-overflow-scrolling: touch; }
+}
+
+@layer components {
+  /* Mobile-first buttons — full touch target */
+  .btn-primary {
+    @apply bg-charcoal text-ivory px-6 py-3.5 font-sans text-xs tracking-[0.15em] uppercase transition-all duration-300 active:scale-95;
+    min-height: 48px;
+  }
+
+  .btn-outline {
+    @apply border border-charcoal text-charcoal px-6 py-3.5 font-sans text-xs tracking-[0.15em] uppercase transition-all duration-300 active:scale-95;
+    min-height: 48px;
+  }
+
+  .btn-gold {
+    @apply bg-gold text-white px-6 py-3.5 font-sans text-xs tracking-[0.15em] uppercase transition-all duration-300 active:scale-95;
+    min-height: 48px;
+  }
+
+  /* Section title — smaller on mobile */
+  .section-title {
+    @apply font-display text-3xl md:text-5xl text-charcoal leading-tight;
+  }
+
+  .tag {
+    @apply inline-block text-[10px] tracking-[0.2em] uppercase font-sans font-medium text-mink;
+  }
+
+  /* Touch-friendly card — no hover translate on mobile */
+  .card-hover {
+    @apply transition-shadow duration-300 active:shadow-md;
+  }
+
+  .input-field {
+    @apply w-full border border-gray-200 bg-white px-4 py-3.5 text-base font-sans focus:outline-none focus:border-rose transition-colors duration-200;
+    /* text-base prevents iOS zoom on focus */
+    font-size: 16px;
+  }
+
+  .skeleton {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+
+  /* Touch icon buttons — always 44px minimum */
+  .icon-btn {
+    @apply flex items-center justify-center transition-colors duration-200 active:scale-90;
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Hide scrollbar on category scroll strip */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Custom scrollbar — desktop only */
+@media (min-width: 768px) {
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #FAF7F2; }
+  ::-webkit-scrollbar-thumb { background: #C17B6F; border-radius: 3px; }
+}
+
+/* Drawer slide-in animation */
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+.drawer-up   { animation: slideUp 0.35s cubic-bezier(0.32,0.72,0,1) forwards; }
+.drawer-left { animation: slideInLeft 0.3s ease forwards; }
+
+/* Hero text animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+.animate-fade-up { animation: fadeUp 0.6s ease-out forwards; }
+.animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+
+/* Bottom nav safe area */
+.bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom);
+}
