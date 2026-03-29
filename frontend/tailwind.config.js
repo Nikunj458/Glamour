@@ -2,7 +2,32 @@
 module.exports = {
   content: [
     './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
+    './src/**/*.{js,ts,jsx,tsx,css}',
+    './src/pages/**/*.{js,jsx}',
+    './src/components/**/*.{js,jsx}',
+    './src/context/**/*.{js,jsx}',
+    './src/utils/**/*.{js,jsx}',
+  ],
+  safelist: [
+    // Layout & spacing
+    { pattern: /^(p|m|px|py|pt|pb|pl|pr|mx|my|mt|mb|ml|mr|gap|space)-./ },
+    // Flex & grid
+    { pattern: /^(flex|grid|inline|block|hidden|overflow)./ },
+    // Colors — all custom colors
+    { pattern: /^(bg|text|border|ring|fill|stroke)-(ivory|blush|rose|mink|charcoal|champagne|gold)/ },
+    { pattern: /^(bg|text|border|ring|fill|stroke)-(ivory|blush|rose|mink|charcoal|champagne|gold)\/./ },
+    // Sizing
+    { pattern: /^(w|h|min-w|max-w|min-h|max-h)-./ },
+    // Typography
+    { pattern: /^(font|text|leading|tracking|italic|uppercase|lowercase|capitalize)./ },
+    // Borders & rounded
+    { pattern: /^(rounded|border)./ },
+    // Transitions & animations
+    { pattern: /^(transition|animate|duration|ease|delay)./ },
+    // Position
+    { pattern: /^(absolute|relative|fixed|sticky|inset|top|bottom|left|right|z)./ },
+    // Display responsive
+    { pattern: /^(md:|lg:|sm:|xl:)/ },
   ],
   theme: {
     extend: {
