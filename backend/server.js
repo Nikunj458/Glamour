@@ -18,18 +18,26 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  process.env.FRONTEND_URL,
+  'https://glamourboutique.onrender.com',  // ← deployed frontend
+  process.env.FRONTEND_URL,                // ← from .env (override anytime)
 ].filter(Boolean);
 
-const cors = require('cors');
-
 app.use(cors({
-  origin: [
-    "https://glamourboutique.onrender.com"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
+  origin: (origin, cb) => {
+    // Allow no-origin requests (Postman, mobile apps, server-to-server)
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.includes(origin)) return cb(null, true);
+    console.warn(`⛔ CORS blocked origin: ${origin}`);
+    cb(new Error(`CORS: origin ${origin} not allowed`));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+// Handle preflight for all routes
+app.options('*', cors());
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -51,5 +59,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`\n🌸 Boutique Server → http://localhost:${PORT}`);
   console.log(`📦 Environment : ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🖼️  ImageKit    : ${process.env.IMAGEKIT_URL_ENDPOINT ? '✅ configured' : '⚠️  not configured'}\n`);
+  console.log(`🖼️  ImageKit    : ${process.env.IMAGEKIT_URL_ENDPOINT ? '✅ configured' : '⚠️  not configured'}`);
+  console.log(`🌐 CORS origins: ${allowedOrigins.join(', ')}\n`);
 });
