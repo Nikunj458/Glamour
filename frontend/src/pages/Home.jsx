@@ -205,7 +205,7 @@ export default function Home() {
           </p>
           <div className="flex gap-3 flex-wrap animate-fade-up" style={{ animationDelay: '0.7s', opacity: 0 }}>
             <Link to="/collections"
-              className="flex-1 sm:flex-none text-center btn-primary  p-3 bg-ivory text-charcoal flex items-center justify-center gap-2">
+              className="flex-1 sm:flex-none text-center btn-primary py-3  px-3 bg-ivory text-charcoal flex items-center justify-center gap-2">
               Shop Now <ArrowRight size={14} />
             </Link>
             <Link onClick={() => storyRef.current.scrollIntoView({ behavior: "smooth" })}
