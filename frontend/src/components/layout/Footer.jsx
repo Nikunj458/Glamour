@@ -5,8 +5,6 @@ import { useState } from 'react';
 export default function Footer() {
   return (
     <footer className="bg-charcoal text-ivory">
-      {/* Promotional Banner */}
-    
 
       {/* Main grid */}
       <div className="px-4 py-6 md:max-w-6xl md:mx-auto md:grid md:grid-cols-4 md:gap-8 md:py-10">
@@ -40,7 +38,7 @@ export default function Footer() {
         {[
           {
             key: 'collections', label: 'Collections',
-            links: ['Ethnic','Western','Bridal','Casual',].map(c => ({ to: `/collections/${c.toLowerCase()}`, label: c }))
+            links: ['Ethnic','Western','Bridal','Casual'].map(c => ({ to: `/collections/${c.toLowerCase()}`, label: c }))
           },
           {
             key: 'links', label: 'Quick Links',
@@ -77,11 +75,11 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-white/10 px-4 py-4">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="max-w-6xl mx-auto flex flex-col items-center gap-2 sm:flex-row sm:justify-between">
           <p className="text-[10px] text-white/35 font-sans flex items-center gap-1.5">
             Created by{' '}
             <a
-              href="www.linkedin.com/in/nikunj-garg-35aa752a7"
+              href="https://www.linkedin.com/in/nikunj-garg-35aa752a7"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blush hover:text-rose transition-colors flex items-center gap-1 font-medium"
@@ -90,11 +88,12 @@ export default function Footer() {
               Nikunj Garg
             </a>
           </p>
-          <p className="text-[10px] text-white/35 font-sans pr-[35px] tracking-widest text-center sm:text-left">
+          <p className="text-[10px] text-white/35 font-sans tracking-widest text-center sm:text-right">
             © 2026 GLAMOUR BOUTIQUE. ALL RIGHTS RESERVED.
           </p>
         </div>
       </div>
+
     </footer>
   );
 }
@@ -111,7 +110,7 @@ function AccordionSection({ section }) {
         <p className="tag text-blush text-[9px] tracking-[0.25em]">{section.label}</p>
         <span className={`text-white/50 md:hidden transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>▾</span>
       </button>
-      <div className={`overflow-hidden transition-all duration-300 ${open ? 'max-h-60' : 'max-h-0'} md:max-h-none  md:pb-0`}>
+      <div className={`overflow-hidden transition-all duration-300 ${open ? 'max-h-60' : 'max-h-0'} md:max-h-none md:pb-0`}>
         {section.links.map(l => (
           <Link key={l.to} to={l.to} className="block text-xs text-white/60 font-sans py-1.5 hover:text-ivory transition-colors">
             {l.label}
