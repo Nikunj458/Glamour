@@ -74,7 +74,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/10 px-4 py-4">
+      <div className="border-t border-white/10 px-4 pb-7 pt-4">
         <div className="max-w-6xl mx-auto flex flex-col items-center gap-2 sm:flex-row sm:justify-between">
           <p className="text-[10px] text-white/35 font-sans flex items-center gap-1.5">
             Created by{' '}
