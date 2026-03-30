@@ -91,7 +91,7 @@ export default function Navbar() {
             <Link to="/favourites" className="icon-btn relative text-charcoal hidden md:flex" aria-label="Favourites">
               <Heart size={20} />
               {favourites.length > 0 && (
-                <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-rose text-white text-[9px] flex items-center justify-center rounded-full">
+                <span className="absolute top-4 right-1 w-3.5 h-3.5 bg-rose text-white text-[9px] flex items-center justify-center rounded-full">
                   {favourites.length}
                 </span>
               )}
