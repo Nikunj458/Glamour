@@ -74,7 +74,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/10 px-4 pb-7 pt-4">
+      <div className="border-t border-white/10 px-4 mb-[30px] pb-7 pt-2">
         <div className="max-w-6xl mx-auto flex flex-col items-center gap-2 sm:flex-row sm:justify-between">
           <p className="text-[10px] text-white/35 font-sans flex items-center gap-1.5">
             Created by{' '}
@@ -88,7 +88,7 @@ export default function Footer() {
               Nikunj Garg
             </a>
           </p>
-          <p className="text-[10px] text-white/35 font-sans tracking-widest text-center sm:text-right">
+          <p className="text-[10px] md:mr-[50px] text-white/35 font-sans tracking-widest text-center sm:text-right">
             © 2026 GLAMOUR BOUTIQUE. ALL RIGHTS RESERVED.
           </p>
         </div>
