@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import { IK, FALLBACK } from '../../utils/imagekit';
 import toast from 'react-hot-toast';
 
-const OWNER_WHATSAPP = '9977803404';
+const OWNER_WHATSAPP = '919977803404';
 
 // ── Login prompt popup ────────────────────────────────────────────────────────
 function LoginPopup({ onClose, onLogin }) {
