@@ -11,7 +11,6 @@ const HERO_IMAGES = [
   '//www.rozinaa.com/cdn/shop/files/New-banner-21-11-23.jpg?v=1700562899&width=375 375w, //www.rozinaa.com/cdn/shop/files/New-banner-21-11-23.jpg?v=1700562899&width=550 550w, //www.rozinaa.com/cdn/shop/files/New-banner-21-11-23.jpg?v=1700562899&width=750 750w, //www.rozinaa.com/cdn/shop/files/New-banner-21-11-23.jpg?v=1700562899&width=1100 1100w, //www.rozinaa.com/cdn/shop/files/New-banner-21-11-23.jpg?v=1700562899&width=1500 1500w, //www.rozinaa.com/cdn/shop/files/New-banner-21-11-23.jpg?v=1700562899&width=1780 1780w, //www.rozinaa.com/cdn/shop/files/New-banner-21-11-23.jpg?v=1700562899&width=2000 2000w, //www.rozinaa.com/cdn/shop/files/New-banner-21-11-23.jpg?v=1700562899&width=3000 3000w, //www.rozinaa.com/cdn/shop/files/New-banner-21-11-23.jpg?v=1700562899&width=3840 3840w',
 ];
 
-// Category images — keyed by name, fallback for unknown categories
 const CAT_IMAGES = {
   'Ethnic':      { img: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&q=80', desc: 'Sarees & Kurtas' },
   'Bridal':      { img: '//www.rozinaa.com/cdn/shop/files/IMG_6228.jpg?v=1756644675&width=416',    desc: 'For your day' },
@@ -72,7 +71,6 @@ function FeaturedSection({ storyRef, loading, featured, newest }) {
       </div>
 
       <div className="relative">
-        {/* Left arrow */}
         {scrollState.left && (
           <button
             onClick={() => scroll('left')}
@@ -83,7 +81,6 @@ function FeaturedSection({ storyRef, loading, featured, newest }) {
           </button>
         )}
 
-        {/* Scrollable row */}
         <div ref={scrollRef} className="flex gap-3 overflow-x-auto no-scrollbar pb-2 ml-[-4px]">
           {items.map((p, i) =>
             loading
@@ -92,7 +89,6 @@ function FeaturedSection({ storyRef, loading, featured, newest }) {
           )}
         </div>
 
-        {/* Right arrow */}
         {scrollState.right && (
           <button
             onClick={() => scroll('right')}
@@ -108,14 +104,14 @@ function FeaturedSection({ storyRef, loading, featured, newest }) {
 }
 
 export default function Home() {
-  const [heroIdx, setHeroIdx]     = useState(0);
-  const [featured, setFeatured]   = useState([]);
-  const [newest, setNewest]       = useState([]);
-  const [loading, setLoading]     = useState(true);
+  const [heroIdx, setHeroIdx]       = useState(0);
+  const [featured, setFeatured]     = useState([]);
+  const [newest, setNewest]         = useState([]);
+  const [loading, setLoading]       = useState(true);
   const [categories, setCategories] = useState([]);
-  const featuredRef  = useRef(null);
-  const touchStartX  = useRef(null);
-  const catScrollRef = useRef(null);
+  const featuredRef   = useRef(null);
+  const touchStartX   = useRef(null);
+  const catScrollRef  = useRef(null);
   const [catScrollState, setCatScrollState] = useState({ left: false, right: true });
   const storyRef = useRef(null);
 
@@ -136,7 +132,6 @@ export default function Home() {
     return () => el.removeEventListener('scroll', updateCatScroll);
   }, [categories]);
 
-  // Fetch active categories from API
   useEffect(() => {
     api.get('/categories')
       .then(({ data }) => setCategories(data))
@@ -148,13 +143,11 @@ export default function Home() {
       });
   }, []);
 
-  // Auto-advance hero
   useEffect(() => {
     const t = setInterval(() => setHeroIdx(i => (i + 1) % HERO_IMAGES.length), 5000);
     return () => clearInterval(t);
   }, []);
 
-  // Touch swipe on hero
   const onTouchStart = e => { touchStartX.current = e.touches[0].clientX; };
   const onTouchEnd = e => {
     if (touchStartX.current === null) return;
@@ -186,13 +179,12 @@ export default function Home() {
         onTouchEnd={onTouchEnd}
       >
         {HERO_IMAGES.map((src, i) => (
-          <div key={i} className={`absolute inset-0 transition-opacity  duration-1000 ${i === heroIdx ? 'opacity-100' : 'opacity-0'}`}>
+          <div key={i} className={`absolute inset-0 transition-opacity duration-1000 ${i === heroIdx ? 'opacity-100' : 'opacity-0'}`}>
             <img src={src} alt="hero" className="w-full h-full object-cover object-top" />
             <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/30 to-transparent" />
           </div>
         ))}
 
-        {/* Content — bottom-anchored for mobile readability */}
         <div className="relative z-10 w-full px-5 pb-12 pt-24">
           <p className="tag text-blush mb-3 animate-fade-in" style={{ animationDelay: '0.2s', opacity: 0 }}>
             New Collection 2026
@@ -205,17 +197,16 @@ export default function Home() {
           </p>
           <div className="flex gap-3 flex-wrap animate-fade-up" style={{ animationDelay: '0.7s', opacity: 0 }}>
             <Link to="/collections"
-              className="flex-1 sm:flex-none text-center btn-primary py-3  px-3 bg-ivory text-charcoal flex items-center justify-center gap-2">
+              className="flex-1 sm:flex-none text-center btn-primary py-3 px-3 bg-ivory text-charcoal flex items-center justify-center gap-2">
               Shop Now <ArrowRight size={14} />
             </Link>
-            <Link onClick={() => storyRef.current.scrollIntoView({ behavior: "smooth" })}
+            <Link onClick={() => storyRef.current.scrollIntoView({ behavior: 'smooth' })}
               className="flex-1 sm:flex-none text-center btn-outline border-ivory/70 text-ivory flex items-center justify-center">
               Featured
             </Link>
           </div>
         </div>
 
-        {/* Slide dots */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
           {HERO_IMAGES.map((_, i) => (
             <button key={i} onClick={() => setHeroIdx(i)}
@@ -241,7 +232,7 @@ export default function Home() {
               onClick={() => {
                 const el = catScrollRef.current;
                 if (!el) return;
-                const cardW = 188;
+                const cardW = 156;
                 const target = Math.floor((el.scrollLeft - 1) / cardW) * cardW;
                 el.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
               }}
@@ -252,17 +243,14 @@ export default function Home() {
             </button>
           )}
 
-          <div
-            ref={catScrollRef}
-            className="flex gap-3 overflow-x-auto no-scrollbar pb-2 ml-[-4px]"
-          >
+          <div ref={catScrollRef} className="flex gap-3 overflow-x-auto no-scrollbar pb-2 ml-[-4px]">
             {categories.map(cat => {
               const meta   = CAT_IMAGES[cat.name] || { img: FALLBACK_IMG, desc: FALLBACK_DESC };
               const imgSrc = cat.image?.url || meta.img;
               return (
                 <Link key={cat.name} to={`/collections/${cat.name.toLowerCase()}`}
-                  className="flex-shrink-0 w-44 md:w-52 group">
-                  <div className="aspect-square overflow-hidden bg-gray-100 mb-1.5">
+                  className="flex-shrink-0 w-36 md:w-44 group">
+                  <div className="aspect-[3/4] overflow-hidden bg-gray-100 mb-1.5">
                     <img src={imgSrc} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   </div>
                   <p className="font-display text-sm text-charcoal text-center leading-tight">{cat.name}</p>
@@ -277,7 +265,7 @@ export default function Home() {
               onClick={() => {
                 const el = catScrollRef.current;
                 if (!el) return;
-                const cardW = 188;
+                const cardW = 156;
                 const target = (Math.floor(el.scrollLeft / cardW) + 1) * cardW;
                 el.scrollTo({ left: target, behavior: 'smooth' });
               }}
@@ -321,7 +309,7 @@ export default function Home() {
       </section>
 
       {/* ── MARQUEE STRIP ─────────────────────────── */}
-      <section className="relative overflow-hidden  py-0" style={{borderTop:'2px solid #E8C4B8', borderBottom:'2px solid #E8C4B8'}}>
+      <section className="relative overflow-hidden py-0" style={{borderTop:'2px solid #E8C4B8', borderBottom:'2px solid #E8C4B8'}}>
         <style>{`
           @keyframes mq-scroll-l {
             from { transform: translateX(0); }
@@ -411,22 +399,17 @@ export default function Home() {
           }
         `}</style>
 
-        {/* ── Row 1: BIG FILLED — scrolls LEFT fast ── */}
         <div style={{overflow:'hidden',backgroundColor:'#F7E7CE', paddingTop:'0.6rem',paddingBottom:'0.6rem'}}>
           <div className="mq-track-l">
             {[
-              { text: 'Glamour',    accent: false },
-              { text: '✦',                  accent: true,  divider: true },
-              // { text: 'Handcrafted',         accent: false },
-              // { text: '✦',                  accent: true,  divider: true },
-              { text: 'Timeless',            accent: true  },
-              { text: '✦',                  accent: false, divider: true },
-              { text: 'Glamour',    accent: false },
-              { text: '✦',                  accent: true,  divider: true },
-              // { text: 'Handcrafted',         accent: false },
-              // { text: '✦',                  accent: true,  divider: true },
-              { text: 'Timeless',            accent: true  },
-              { text: '✦',                  accent: false, divider: true },
+              { text: 'Glamour',   accent: false },
+              { text: '✦',        accent: true,  divider: true },
+              { text: 'Timeless', accent: true  },
+              { text: '✦',        accent: false, divider: true },
+              { text: 'Glamour',   accent: false },
+              { text: '✦',        accent: true,  divider: true },
+              { text: 'Timeless', accent: true  },
+              { text: '✦',        accent: false, divider: true },
             ].map((w, i) =>
               w.divider
                 ? <span key={i} className="mq-divider">{w.text}</span>
@@ -437,22 +420,17 @@ export default function Home() {
 
         <div className="mq-sep" />
 
-        {/* ── Row 2: OUTLINE — scrolls RIGHT slower ── */}
         <div style={{overflow:'hidden',opacity:0.9, paddingBottom:'0.6rem',paddingTop:'0.6rem'}}>
           <div className="mq-track-r">
             {[
-              { text: 'Indian Heritage',    accent: false },
-              { text: '◆',                  accent: true,  divider: true },
-              { text: 'Premium Fabrics',     accent: true  },
-              { text: '◆',                  accent: false, divider: true },
-              // { text: 'Born in Tradition',   accent: false },
-              // { text: '◆',                  accent: true,  divider: true },
-              { text: 'Indian Heritage',    accent: false },
-              { text: '◆',                  accent: true,  divider: true },
-              { text: 'Premium Fabrics',     accent: true  },
-              { text: '◆',                  accent: false, divider: true },
-              // { text: 'Born in Tradition',   accent: false },
-              // { text: '◆',                  accent: true,  divider: true },
+              { text: 'Indian Heritage', accent: false },
+              { text: '◆',              accent: true,  divider: true },
+              { text: 'Premium Fabrics', accent: true  },
+              { text: '◆',              accent: false, divider: true },
+              { text: 'Indian Heritage', accent: false },
+              { text: '◆',              accent: true,  divider: true },
+              { text: 'Premium Fabrics', accent: true  },
+              { text: '◆',              accent: false, divider: true },
             ].map((w, i) =>
               w.divider
                 ? <span key={i} className="mq-divider">{w.text}</span>
@@ -461,7 +439,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-  <div style={{ backgroundColor: '#faf4eafd' }} className="border-b border-white/10 px-4 py-10 text-center">
+
+      <div style={{ backgroundColor: '#faf4eafd' }} className="border-b border-white/10 px-4 py-10 text-center">
         <p className="tag text-zinc-700 mb-2 tracking-[0.3em] text-[10px] uppercase">New Season. New You.</p>
         <h3 className="font-display text-3xl italic text-rose mb-3">Dress to be Remembered</h3>
         <p className="text-xs text-zinc-600 font-sans max-w-xs mx-auto leading-relaxed mb-5">
