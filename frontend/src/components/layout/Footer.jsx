@@ -12,7 +12,7 @@ export default function Footer() {
         {/* Brand */}
         <div className="pb-5 border-b border-white/10 md:border-0 md:pb-0">
           <div className="mb-3">
-            <span className="font-display text-3xl italic text-ivory"> <a href ="/' > Glamour</a> </span>
+            <span className="font-display text-3xl italic text-ivory"> <a href ="/" > Glamour</a> </span>
             <span className="block font-sans text-[11px] tracking-[0.4em] text-rose uppercase">Boutique</span>
           </div>
           <p className="text-sm text-white/55 font-sans leading-relaxed mb-4">
