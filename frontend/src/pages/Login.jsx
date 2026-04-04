@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Eye, EyeOff, ArrowLeft, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -10,7 +10,9 @@ export default function Login() {
   const [showPass, setShowPass] = useState(false);
   const [loading,  setLoading]  = useState(false);
   const { login, register } = useAuth();
-  const navigate = useNavigate();
+  const navigate  = useNavigate();
+  const location  = useLocation();
+  const from      = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,11 +21,11 @@ export default function Login() {
       if (mode === 'login') {
         const data = await login(form.email, form.password);
         toast.success(`Welcome back, ${data.user.name}! ✨`);
-        navigate(data.user.role === 'admin' ? '/admin' : '/');
+        navigate(data.user.role === 'admin' ? '/admin' : from, { replace: true });
       } else {
         await register(form.name, form.email, form.password);
         toast.success('Account created! Welcome 🌸');
-        navigate('/');
+        navigate(from, { replace: true });
       }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Something went wrong');
@@ -33,11 +35,11 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-ivory h-screen flex flex-col">
+    <div className="min-h-screen bg-ivory flex flex-col">
 
       {/* ── MOBILE HEADER ─────────────────────────── */}
       <div className="sticky top-0 z-10 bg-ivory/90 backdrop-blur-sm border-b border-gray-100 px-4 h-14 flex items-center md:hidden">
-        <button onClick={() => navigate(-1)} className="icon-btn text-charcoal -ml-2">
+        <button onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center text-charcoal -ml-2">
           <ArrowLeft size={20} />
         </button>
         <div className="flex-1 text-center">
@@ -47,14 +49,14 @@ export default function Login() {
         <div className="w-10" />
       </div>
 
-      <div className="flex flex-1 min-h-0 h-screen ">
+      <div className="flex flex-1">
 
         {/* ── DESKTOP LEFT PANEL ────────────────────── */}
-        <div className="hidden md:flex h-screen md:w-1/2 relative overflow-hidden">
+        <div className="hidden md:flex md:w-1/2 relative overflow-hidden min-h-screen">
           <img
-            src="https://images.unsplash.com/photo-1727430334140-c21dc3d415f1?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src="https://images.unsplash.com/photo-1727430334140-c21dc3d415f1?q=80&w=870&auto=format&fit=crop"
             alt="Boutique"
-            className="w-full h-full overflow-y-hidden object-cover"
+            className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/30 to-transparent" />
           <div className="absolute bottom-12 left-10 right-10">
@@ -66,33 +68,28 @@ export default function Login() {
               Fashion that tells your story. Curated with love, crafted with purpose.
             </p>
             <div className="flex gap-3 mt-6">
-              {['1000+\nStyles', '15+\nYears', '50k+\nCustomers'].map((stat) => {
-                const [num, label] = stat.split('\n');
-                return (
-                  <div key={label} className="text-center bg-white/10 backdrop-blur-sm px-4 py-3">
-                    <p className="font-display text-2xl italic text-ivory">{num}</p>
-                    <p className="text-[9px] font-sans text-white/60 tracking-widest uppercase">{label}</p>
-                  </div>
-                );
-              })}
+              {[['1000+', 'Styles'], ['15+', 'Years'], ['50k+', 'Customers']].map(([num, label]) => (
+                <div key={label} className="text-center bg-white/10 backdrop-blur-sm px-4 py-3">
+                  <p className="font-display text-2xl italic text-ivory">{num}</p>
+                  <p className="text-[9px] font-sans text-white/60 tracking-widest uppercase">{label}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
         {/* ── FORM PANEL ────────────────────────────── */}
-        <div className="w-full md:w-1/2 flex items-center justify-center   px-5 py-8 md:py-12 overflow-y-hidden">
-          <div className="w-full max-w-sm min-h-[520px] flex flex-col justify-center">
+        <div className="w-full md:w-1/2 flex items-start md:items-center justify-center px-5 py-8 md:py-12">
+          <div className="w-full max-w-sm">
 
-            {/* Mode toggle pills */}
-            <div className="flex bg-champagne/60 mt-[60px] p-1 mb-8 gap-1">
+            {/* Mode toggle */}
+            <div className="flex bg-champagne/60 p-1 mb-8 gap-1">
               {['login', 'register'].map(m => (
                 <button
                   key={m}
                   onClick={() => setMode(m)}
-                  className={`flex-1 py-2.5 text-xs font-sans tracking-widest uppercase transition-all duration-200 ${
-                    mode === m
-                      ? 'bg-charcoal text-ivory shadow-sm'
-                      : 'text-mink hover:text-charcoal'
+                  className={`flex-1 py-3 text-xs font-sans tracking-widest uppercase transition-all duration-200 ${
+                    mode === m ? 'bg-charcoal text-ivory shadow-sm' : 'text-mink hover:text-charcoal'
                   }`}
                 >
                   {m === 'login' ? 'Sign In' : 'Register'}
@@ -102,7 +99,7 @@ export default function Login() {
 
             {/* Heading */}
             <div className="mb-7">
-              <p className="tag  flex items-center gap-1.5">
+              <p className="font-sans text-[10px] tracking-widest uppercase text-mink flex items-center gap-1.5 mb-1">
                 <Sparkles size={10} />
                 {mode === 'login' ? 'Welcome back' : 'Join us'}
               </p>
@@ -112,11 +109,12 @@ export default function Login() {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
+
               {mode === 'register' && (
                 <div>
-                  <label className="block text-[10px] font-sans tracking-widest uppercase text-mink ">
-                    Full Name *
+                  <label className="block text-[10px] font-sans tracking-widests uppercase text-mink mb-2">
+                    Full Name <span className="text-rose">*</span>
                   </label>
                   <input
                     type="text"
@@ -124,15 +122,16 @@ export default function Login() {
                     autoComplete="name"
                     value={form.name}
                     onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                    className="input-field"
                     placeholder="Your full name"
+                    style={{ fontSize: '16px' }}
+                    className="w-full border border-gray-200 bg-white px-4 py-3.5 font-sans text-charcoal placeholder-gray-400 focus:outline-none focus:border-rose transition-colors"
                   />
                 </div>
               )}
 
               <div>
-                <label className="block text-[10px] font-sans tracking-widest uppercase text-mink ">
-                  Email *
+                <label className="block text-[10px] font-sans tracking-widests uppercase text-mink mb-2">
+                  Email <span className="text-rose">*</span>
                 </label>
                 <input
                   type="email"
@@ -141,14 +140,15 @@ export default function Login() {
                   inputMode="email"
                   value={form.email}
                   onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  className="input-field"
                   placeholder="your@email.com"
+                  style={{ fontSize: '16px' }}
+                  className="w-full border border-gray-200 bg-white px-4 py-3.5 font-sans text-charcoal placeholder-gray-400 focus:outline-none focus:border-rose transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-sans tracking-widest uppercase text-mink ">
-                  Password *
+                <label className="block text-[10px] font-sans tracking-widests uppercase text-mink mb-2">
+                  Password <span className="text-rose">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -158,13 +158,14 @@ export default function Login() {
                     autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                     value={form.password}
                     onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-                    className="input-field pb-[px] pr-11"
                     placeholder="Min. 6 characters"
+                    style={{ fontSize: '16px' }}
+                    className="w-full border border-gray-200 bg-white px-4 py-3.5 pr-12 font-sans text-charcoal placeholder-gray-400 focus:outline-none focus:border-rose transition-colors"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPass(s => !s)}
-                    className="absolute right-0 top-0 bottom-0 w-11 flex items-center justify-center text-mink"
+                    className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center text-mink hover:text-charcoal transition-colors"
                     aria-label={showPass ? 'Hide password' : 'Show password'}
                   >
                     {showPass ? <EyeOff size={17} /> : <Eye size={17} />}
@@ -172,10 +173,11 @@ export default function Login() {
                 </div>
               </div>
 
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-primary w-full flex items-center justify-center gap-2 mt-1"
+                className="w-full bg-charcoal text-ivory py-4 font-sans text-xs tracking-widest uppercase flex items-center justify-center gap-2 hover:bg-rose transition-colors active:scale-[0.98] mt-2 disabled:opacity-70"
               >
                 {loading ? (
                   <>
@@ -187,7 +189,7 @@ export default function Login() {
             </form>
 
             {/* Switch mode */}
-            <p className="text-center mt-5 text-xs font-sans text-mink">
+            <p className="text-center mt-6 text-xs font-sans text-mink">
               {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
               <button
                 onClick={() => setMode(m => m === 'login' ? 'register' : 'login')}
@@ -198,8 +200,8 @@ export default function Login() {
             </p>
 
             {/* Back to site */}
-            <div className="mt-6 text-center">
-              <Link to="/" className="text-[11px] mb-[10px] font-sans text-mink tracking-widest uppercase flex items-center justify-center gap-1.5 hover:text-rose transition-colors">
+            <div className="mt-6 text-center border-t border-gray-100 pt-6">
+              <Link to="/" className="text-[11px] font-sans text-mink tracking-widests uppercase flex items-center justify-center gap-1.5 hover:text-rose transition-colors">
                 <ArrowLeft size={11} /> Back to Home
               </Link>
             </div>
