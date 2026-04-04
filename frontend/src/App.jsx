@@ -13,6 +13,8 @@ import Account from './pages/Account';
 import AdminDashboard from './pages/AdminDashboard';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword  from './pages/ResetPassword';
 
 // ── Redirect logged-in users away from /login ────────────────────────────────
 function GuestRoute({ children }) {
@@ -65,6 +67,8 @@ function AppRoutes() {
         <Route path="admin"           element={
           <ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>
         } />
+        <Route path="forgot-password"  element={<ForgotPassword />} />
+        <Route path="reset-password/:token" element={<ResetPassword />} />
         <Route path="*"               element={<NotFound />} />
       </Route>
     </Routes>
