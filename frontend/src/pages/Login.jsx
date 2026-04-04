@@ -173,6 +173,15 @@ export default function Login() {
                 </div>
               </div>
 
+              {/* Forgot password — only on login mode */}
+              {mode === 'login' && (
+                <div className="text-right -mt-2">
+                  <a href="/forgot-password" className="text-[11px] font-sans text-mink hover:text-rose transition-colors underline underline-offset-2">
+                    Forgot password?
+                  </a>
+                </div>
+              )}
+
               {/* Submit */}
               <button
                 type="submit"
