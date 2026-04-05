@@ -1,11 +1,19 @@
-import jwt      from 'jsonwebtoken';
-import crypto   from 'crypto';
-import { Resend } from 'resend';
-import User     from '../models/User.js';
+import jwt        from 'jsonwebtoken';
+import crypto     from 'crypto';
+import nodemailer from 'nodemailer';
+import User       from '../models/User.js';
 
 const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const createTransporter = () => nodemailer.createTransport({
+  host: 'smtp-relay.brevo.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.BREVO_SMTP_USER,
+    pass: process.env.BREVO_SMTP_PASS,
+  },
+});
 
 // ── POST /api/auth/register ───────────────────────────────────────────────
 export const register = async (req, res) => {
@@ -63,30 +71,24 @@ export const forgotPassword = async (req, res) => {
 
     const user = await User.findOne({ email: email.toLowerCase() });
 
-    // Always respond success to prevent email enumeration attacks
     if (!user) {
       return res.json({ message: 'If an account exists, a reset email has been sent.' });
     }
 
-    // Generate token and save
     const resetToken = user.getResetPasswordToken();
     await user.save({ validateBeforeSave: false });
 
-    // Build reset URL
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
-    // Email content
     const html = `
       <div style="font-family: 'Helvetica', sans-serif; max-width: 520px; margin: 0 auto; padding: 32px; background: #FAF7F2;">
         <h1 style="font-family: Georgia, serif; font-style: italic; color: #2C2C2C; font-size: 28px; margin-bottom: 8px;">Glamour Boutique</h1>
         <p style="color: #8B6F68; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 32px;">Password Reset</p>
-
         <p style="color: #2C2C2C; font-size: 14px; line-height: 1.6;">Hi ${user.name},</p>
         <p style="color: #2C2C2C; font-size: 14px; line-height: 1.6;">
           We received a request to reset your password. Click the button below to create a new password.
           This link expires in <strong>1 hour</strong>.
         </p>
-
         <div style="text-align: center; margin: 32px 0;">
           <a href="${resetUrl}"
             style="display: inline-block; background: #2C2C2C; color: #FAF7F2; padding: 14px 32px;
@@ -95,26 +97,24 @@ export const forgotPassword = async (req, res) => {
             Reset Password
           </a>
         </div>
-
         <p style="color: #8B6F68; font-size: 12px; line-height: 1.6;">
-          If you didn't request this, you can safely ignore this email. Your password will not change.
+          If you didn't request this, you can safely ignore this email.
         </p>
-
         <hr style="border: none; border-top: 1px solid #E8C4B8; margin: 24px 0;" />
         <p style="color: #8B6F68; font-size: 11px;">© 2026 Glamour Boutique. All rights reserved.</p>
       </div>
     `;
 
     try {
-      await resend.emails.send({
-        from:    'Glamour Boutique <onboarding@resend.dev>',
+      const transporter = createTransporter();
+      await transporter.sendMail({
+        from:    `"Glamour Boutique" <glamourboutique01@gmail.com>`,
         to:      user.email,
         subject: 'Reset your Glamour Boutique password',
         html,
       });
       res.json({ message: 'Password reset email sent. Please check your inbox.' });
     } catch (emailErr) {
-      // Email failed — clean up token so user can retry
       user.resetPasswordToken  = undefined;
       user.resetPasswordExpire = undefined;
       await user.save({ validateBeforeSave: false });
@@ -133,7 +133,6 @@ export const resetPassword = async (req, res) => {
     if (!password || password.length < 6)
       return res.status(400).json({ message: 'Password must be at least 6 characters' });
 
-    // Hash the token from URL to compare with DB
     const hashedToken = crypto
       .createHash('sha256')
       .update(req.params.token)
@@ -147,7 +146,6 @@ export const resetPassword = async (req, res) => {
     if (!user)
       return res.status(400).json({ message: 'Invalid or expired reset link. Please request a new one.' });
 
-    // Set new password and clear reset fields
     user.password            = password;
     user.resetPasswordToken  = undefined;
     user.resetPasswordExpire = undefined;
