@@ -1,19 +1,29 @@
-import jwt        from 'jsonwebtoken';
-import crypto     from 'crypto';
-import nodemailer from 'nodemailer';
-import User       from '../models/User.js';
+import jwt    from 'jsonwebtoken';
+import crypto from 'crypto';
+import User   from '../models/User.js';
 
 const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
-const createTransporter = () => nodemailer.createTransport({
-  host: 'smtp-relay.brevo.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.BREVO_SMTP_USER,
-    pass: process.env.BREVO_SMTP_PASS,
-  },
-});
+const sendBrevoEmail = async ({ to, toName, subject, html }) => {
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'accept':       'application/json',
+      'content-type': 'application/json',
+      'api-key':      process.env.BREVO_API_KEY,
+    },
+    body: JSON.stringify({
+      sender:      { name: 'Glamour Boutique', email: 'glamourboutique01@gmail.com' },
+      to:          [{ email: to, name: toName }],
+      subject,
+      htmlContent: html,
+    }),
+  });
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || 'Brevo API error');
+  }
+};
 
 // ── POST /api/auth/register ───────────────────────────────────────────────
 export const register = async (req, res) => {
@@ -98,7 +108,7 @@ export const forgotPassword = async (req, res) => {
           </a>
         </div>
         <p style="color: #8B6F68; font-size: 12px; line-height: 1.6;">
-          If you didn't request this, you can safely ignore this email.
+          If you didn't request this, you can safely ignore this email. Your password will not change.
         </p>
         <hr style="border: none; border-top: 1px solid #E8C4B8; margin: 24px 0;" />
         <p style="color: #8B6F68; font-size: 11px;">© 2026 Glamour Boutique. All rights reserved.</p>
@@ -106,10 +116,9 @@ export const forgotPassword = async (req, res) => {
     `;
 
     try {
-      const transporter = createTransporter();
-      await transporter.sendMail({
-        from:    `"Glamour Boutique" <glamourboutique01@gmail.com>`,
+      await sendBrevoEmail({
         to:      user.email,
+        toName:  user.name,
         subject: 'Reset your Glamour Boutique password',
         html,
       });
