@@ -1,18 +1,11 @@
 import jwt      from 'jsonwebtoken';
 import crypto   from 'crypto';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import User     from '../models/User.js';
 
 const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
-// ── Gmail transporter ──────────────────────────────────────────────────────
-const createTransporter = () => nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD, // Gmail App Password (not your login password)
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // ── POST /api/auth/register ───────────────────────────────────────────────
 export const register = async (req, res) => {
@@ -113,9 +106,8 @@ export const forgotPassword = async (req, res) => {
     `;
 
     try {
-      const transporter = createTransporter();
-      await transporter.sendMail({
-        from:    `"Glamour Boutique" <${process.env.GMAIL_USER}>`,
+      await resend.emails.send({
+        from:    'Glamour Boutique <onboarding@resend.dev>',
         to:      user.email,
         subject: 'Reset your Glamour Boutique password',
         html,
@@ -149,7 +141,7 @@ export const resetPassword = async (req, res) => {
 
     const user = await User.findOne({
       resetPasswordToken:  hashedToken,
-      resetPasswordExpire: { $gt: Date.now() }, // not expired
+      resetPasswordExpire: { $gt: Date.now() },
     });
 
     if (!user)
@@ -161,7 +153,6 @@ export const resetPassword = async (req, res) => {
     user.resetPasswordExpire = undefined;
     await user.save();
 
-    // Log them in immediately
     res.json({
       message: 'Password reset successful!',
       user,
