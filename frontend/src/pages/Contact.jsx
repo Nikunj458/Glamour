@@ -3,12 +3,9 @@ import { MapPin, Phone, Mail, Clock, Instagram, ChevronDown, Sparkles, Heart, Aw
 import toast from 'react-hot-toast';
 import emailjs from '@emailjs/browser';
 
-// ─── EMAILJS CONFIG ───────────────────────────────────────────────────────────
-// Replace these three values with your own from https://emailjs.com
-const EMAILJS_SERVICE_ID  = 'service_4kk64yo';   // e.g. 'service_abc123'
-const EMAILJS_TEMPLATE_ID = 'template_q34asye';  // e.g. 'template_xyz789'
-const EMAILJS_PUBLIC_KEY  = 'bnRbVfCMdm8LkiItx';   // e.g. 'AbCdEfGhIjKlMnOp'
-// ─────────────────────────────────────────────────────────────────────────────
+const EMAILJS_SERVICE_ID  = 'service_4kk64yo';
+const EMAILJS_TEMPLATE_ID = 'template_q34asye';
+const EMAILJS_PUBLIC_KEY  = 'bnRbVfCMdm8LkiItx';
 
 const FAQS = [
   { q: 'Do you offer custom sizing?', a: 'Yes! We offer custom stitching on most ethnic and bridal pieces. Contact us on WhatsApp for a custom quote.' },
@@ -24,7 +21,6 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSending(true);
-
     try {
       await emailjs.send(
         EMAILJS_SERVICE_ID,
@@ -38,10 +34,8 @@ export default function Contact() {
         },
         EMAILJS_PUBLIC_KEY
       );
-
       toast.success("Message sent! We'll reply soon 💌");
       setForm({ name: '', email: '', phone: '', message: '' });
-
     } catch (err) {
       console.error('EmailJS error:', err);
       toast.error('Something went wrong. Please try WhatsApp or call us directly.');
@@ -186,38 +180,59 @@ export default function Contact() {
             />
           </div>
 
-          {/* Contact form */}
+          {/* Contact form — fixed layout */}
           <div>
             <h2 className="font-display text-xl text-charcoal mb-4">Send a Message</h2>
             <form onSubmit={handleSubmit} className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[10px] font-sans tracking-widest uppercase text-mink mb-1.5">Name *</label>
-                  <input type="text" required value={form.name}
-                    onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                    className="input-field" placeholder="Your name" />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-sans tracking-widest uppercase text-mink mb-1.5">Phone</label>
-                  <input type="tel" value={form.phone}
-                    onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                    className="input-field" placeholder="+91 XXXXX" />
-                </div>
-              </div>
+
+              {/* Name — full width */}
               <div>
-                <label className="block text-[10px] font-sans tracking-widest uppercase text-mink mb-1.5">Email *</label>
-                <input type="email" required value={form.email}
-                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  className="input-field" placeholder="your@email.com" />
+                <label className="block text-[10px] font-sans tracking-widest uppercase text-mink mb-1.5">Name *</label>
+                <input
+                  type="text" required value={form.name}
+                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                  className="input-field" placeholder="Your name"
+                  style={{ fontSize: '16px' }}
+                />
               </div>
+
+              {/* Phone — full width */}
+              <div>
+                <label className="block text-[10px] font-sans tracking-widest uppercase text-mink mb-1.5">Phone</label>
+                <input
+                  type="tel" value={form.phone}
+                  onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                  className="input-field" placeholder="+91 XXXXX"
+                  style={{ fontSize: '16px' }}
+                />
+              </div>
+
+              {/* Email — full width */}
+              <div>
+                <label className="block text-[10px] font-sans tracking-widests uppercase text-mink mb-1.5">Email *</label>
+                <input
+                  type="email" required value={form.email}
+                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                  className="input-field" placeholder="your@email.com"
+                  style={{ fontSize: '16px' }}
+                />
+              </div>
+
+              {/* Message — full width */}
               <div>
                 <label className="block text-[10px] font-sans tracking-widest uppercase text-mink mb-1.5">Message *</label>
-                <textarea required rows={4} value={form.message}
+                <textarea
+                  required rows={4} value={form.message}
                   onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                  className="input-field resize-none" placeholder="What are you looking for?" />
+                  className="input-field resize-none" placeholder="What are you looking for?"
+                  style={{ fontSize: '16px' }}
+                />
               </div>
-              <button type="submit" disabled={sending}
-                className="btn-primary w-full flex items-center justify-center gap-2">
+
+              <button
+                type="submit" disabled={sending}
+                className="btn-primary w-full flex items-center justify-center gap-2"
+              >
                 {sending ? (
                   <><div className="w-4 h-4 border-2 border-ivory border-t-transparent rounded-full animate-spin" /> Sending...</>
                 ) : 'Send Message'}
