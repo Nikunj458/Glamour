@@ -96,20 +96,23 @@ export default function Navbar() {
               <button className="w-10 h-10 flex items-center justify-center text-charcoal hover:text-rose transition-colors" aria-label="Account">
                 <User size={20} />
               </button>
-              <div className="absolute right-0 top-full mt-1 w-40 bg-ivory border border-gray-100 shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-50">
-                {user ? (
-                  <>
-                    <div className="px-3 py-2.5 border-b border-gray-100">
-                      <p className="text-xs font-sans text-mink truncate">{user.name}</p>
-                    </div>
-                    {user.role === 'admin' && (
-                      <Link to="/admin" className="block px-3 py-2 text-xs font-sans text-gold hover:bg-champagne">Admin Panel</Link>
-                    )}
-                    <button onClick={handleLogout} className="w-full text-left px-3 py-2 text-xs font-sans hover:bg-champagne">Logout</button>
-                  </>
-                ) : (
-                  <Link to="/login" className="block px-3 py-2.5 text-xs font-sans hover:bg-champagne">Sign In</Link>
-                )}
+              {/* pt-1 creates invisible hover bridge over the gap */}
+              <div className="absolute right-0 top-full pt-1 w-40 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-50">
+                <div className="bg-ivory border border-gray-100 shadow-xl">
+                  {user ? (
+                    <>
+                      <div className="px-3 py-2.5 border-b border-gray-100">
+                        <p className="text-xs font-sans text-mink truncate">{user.name}</p>
+                      </div>
+                      {user.role === 'admin' && (
+                        <Link to="/admin" className="block px-3 py-2 text-xs font-sans text-gold hover:bg-champagne">Admin Panel</Link>
+                      )}
+                      <button onClick={handleLogout} className="w-full text-left px-3 py-2 text-xs font-sans hover:bg-champagne">Logout</button>
+                    </>
+                  ) : (
+                    <Link to="/login" className="block px-3 py-2.5 text-xs font-sans hover:bg-champagne">Sign In</Link>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -138,26 +141,28 @@ export default function Navbar() {
             }>{l.label}</NavLink>
           ))}
 
-          {/* Collections dropdown */}
+          {/* Collections dropdown — pt-3 creates invisible bridge */}
           <div className="relative group">
             <button className="flex items-center gap-1 font-sans text-[11px] tracking-[0.15em] uppercase text-charcoal hover:text-rose transition-colors">
               Collections <ChevronDown size={11} />
             </button>
-            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[480px] bg-ivory border border-gray-100 shadow-2xl p-6 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200 z-50">
-              <p className="font-sans text-[9px] tracking-[0.25em] uppercase text-mink mb-4">Browse Collections</p>
-              <div className="grid grid-cols-3 gap-3">
-                {categories.map(cat => (
-                  <Link key={cat} to={`/collections/${cat.toLowerCase()}`}
-                    className="p-3 hover:bg-champagne transition-colors group/item">
-                    <span className="font-display text-base text-charcoal group-hover/item:text-rose block">{cat}</span>
-                    <span className="text-[10px] text-mink font-sans">Explore →</span>
+            <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-[480px] opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200 z-50">
+              <div className="bg-ivory border border-gray-100 shadow-2xl p-6">
+                <p className="font-sans text-[9px] tracking-[0.25em] uppercase text-mink mb-4">Browse Collections</p>
+                <div className="grid grid-cols-3 gap-3">
+                  {categories.map(cat => (
+                    <Link key={cat} to={`/collections/${cat.toLowerCase()}`}
+                      className="p-3 hover:bg-champagne transition-colors group/item">
+                      <span className="font-display text-base text-charcoal group-hover/item:text-rose block">{cat}</span>
+                      <span className="text-[10px] text-mink font-sans">Explore →</span>
+                    </Link>
+                  ))}
+                </div>
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <Link to="/collections" className="font-sans text-[9px] tracking-[0.25em] uppercase text-mink hover:text-rose transition-colors">
+                    View All Collections →
                   </Link>
-                ))}
-              </div>
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <Link to="/collections" className="font-sans text-[9px] tracking-[0.25em] uppercase text-mink hover:text-rose transition-colors">
-                  View All Collections →
-                </Link>
+                </div>
               </div>
             </div>
           </div>
