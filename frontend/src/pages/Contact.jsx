@@ -48,8 +48,6 @@ export default function Contact() {
     <div className="pt-24 pb-6 min-h-screen">
 
       <div className="px-4 max-w-lg mx-auto space-y-6">
-
-        {/* ── ABOUT THE BOUTIQUE ─────────────────────── */}
         <div className="bg-white border border-gray-100 overflow-hidden">
           <div className="h-1 bg-gradient-to-r from-blush via-rose to-mink" />
           <div className="p-5 space-y-4">
@@ -97,7 +95,6 @@ export default function Contact() {
             </blockquote>
           </div>
         </div>
-
       </div>
 
       <div>
@@ -145,7 +142,7 @@ export default function Contact() {
             </a>
           </div>
 
-          {/* Store info card */}
+          {/* Store info */}
           <div className="bg-white border border-gray-100 p-4 space-y-3">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-champagne flex items-center justify-center flex-shrink-0">
@@ -180,12 +177,11 @@ export default function Contact() {
             />
           </div>
 
-          {/* Contact form — fixed layout */}
+          {/* Contact form */}
           <div>
             <h2 className="font-display text-xl text-charcoal mb-4">Send a Message</h2>
             <form onSubmit={handleSubmit} className="space-y-3">
 
-              {/* Name — full width */}
               <div>
                 <label className="block text-[10px] font-sans tracking-widest uppercase text-mink mb-1.5">Name *</label>
                 <input
@@ -196,7 +192,6 @@ export default function Contact() {
                 />
               </div>
 
-              {/* Phone — full width */}
               <div>
                 <label className="block text-[10px] font-sans tracking-widest uppercase text-mink mb-1.5">Phone</label>
                 <input
@@ -207,24 +202,23 @@ export default function Contact() {
                 />
               </div>
 
-              {/* Email — full width */}
               <div>
-                <label className="block text-[10px] font-sans tracking-widests uppercase text-mink mb-1.5">Email *</label>
+                <label className="block text-[10px] font-sans tracking-widest uppercase text-mink mb-1.5">Email *</label>
                 <input
-  type="text" required value={form.name}
-  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-  className="input-field w-full block" placeholder="Your name"
-  style={{ fontSize: '16px' }}
-/>
+                  type="email" required value={form.email}
+                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                  className="input-field" placeholder="your@email.com"
+                  style={{ fontSize: '16px' }}
+                />
               </div>
 
-              {/* Message — full width */}
               <div>
                 <label className="block text-[10px] font-sans tracking-widest uppercase text-mink mb-1.5">Message *</label>
                 <textarea
                   required rows={4} value={form.message}
                   onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                  className="input-field resize-none" placeholder="What are you looking for?"
+                  className="input-field resize-none"
+                  placeholder="What are you looking for?"
                   style={{ fontSize: '16px' }}
                 />
               </div>
@@ -240,7 +234,7 @@ export default function Contact() {
             </form>
           </div>
 
-          {/* FAQ accordion */}
+          {/* FAQ */}
           <div>
             <h2 className="font-display text-xl text-charcoal mb-4">Quick Answers</h2>
             <div className="space-y-2">
@@ -259,7 +253,7 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Social links */}
+          {/* Social */}
           <div className="flex justify-center gap-4 pb-4">
             <a href="https://www.instagram.com/glamourboutiquenmh?igsh=MTg2bmp5MHphZjN1MQ==" className="flex items-center gap-2 border border-gray-200 px-5 py-3 text-xs font-sans text-charcoal">
               <Instagram size={15} /> Instagram
