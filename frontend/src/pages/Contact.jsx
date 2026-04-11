@@ -211,11 +211,11 @@ export default function Contact() {
               <div>
                 <label className="block text-[10px] font-sans tracking-widests uppercase text-mink mb-1.5">Email *</label>
                 <input
-                  type="email" required value={form.email}
-                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  className="input-field" placeholder="your@email.com"
-                  style={{ fontSize: '16px' }}
-                />
+  type="text" required value={form.name}
+  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+  className="input-field w-full block" placeholder="Your name"
+  style={{ fontSize: '16px' }}
+/>
               </div>
 
               {/* Message — full width */}
