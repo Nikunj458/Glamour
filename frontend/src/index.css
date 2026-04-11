@@ -55,6 +55,7 @@
     @apply block w-full border border-gray-200 bg-white px-3 py-2.5 font-sans focus:outline-none focus:border-rose transition-colors duration-200;
     font-size: 16px;
     min-width: 0;
+    box-sizing: border-box;
   }
 
   .skeleton {
