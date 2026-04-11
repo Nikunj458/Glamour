@@ -67,7 +67,7 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-2 text-xs text-white/60 font-sans">
               <Mail size={12} className="text-rose" />
-              <a href="mailto:glamourboutique01@gmail.com" className="hover:text-ivory truncate">glamourboutique01@gmail.com</a>
+              <a href="mailto:glamourboutique013@gmail.com" className="hover:text-ivory truncate">glamourboutique013@gmail.com</a>
             </div>
           </div>
         </div>
