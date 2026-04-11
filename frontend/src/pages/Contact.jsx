@@ -13,6 +13,18 @@ const FAQS = [
   { q: 'Is online checkout available?', a: 'No. Purchases are completed through direct contact only.' },
 ];
 
+const inputStyle = {
+  fontSize: '16px',
+  width: '100%',
+  display: 'block',
+  border: '1px solid #e5e7eb',
+  background: 'white',
+  padding: '10px 12px',
+  fontFamily: 'inherit',
+  boxSizing: 'border-box',
+  outline: 'none',
+};
+
 export default function Contact() {
   const [form,    setForm]    = useState({ name: '', email: '', phone: '', message: '' });
   const [sending, setSending] = useState(false);
@@ -187,8 +199,8 @@ export default function Contact() {
                 <input
                   type="text" required value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  className="input-field" placeholder="Your name"
-                  style={{ fontSize: '16px' }}
+                  placeholder="Your name"
+                  style={inputStyle}
                 />
               </div>
 
@@ -197,8 +209,8 @@ export default function Contact() {
                 <input
                   type="tel" value={form.phone}
                   onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                  className="input-field" placeholder="+91 XXXXX"
-                  style={{ fontSize: '16px' }}
+                  placeholder="+91 XXXXX"
+                  style={inputStyle}
                 />
               </div>
 
@@ -207,8 +219,8 @@ export default function Contact() {
                 <input
                   type="email" required value={form.email}
                   onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  className="input-field" placeholder="your@email.com"
-                  style={{ fontSize: '16px' }}
+                  placeholder="your@email.com"
+                  style={inputStyle}
                 />
               </div>
 
@@ -217,9 +229,8 @@ export default function Contact() {
                 <textarea
                   required rows={4} value={form.message}
                   onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                  className="input-field resize-none"
                   placeholder="What are you looking for?"
-                  style={{ fontSize: '16px' }}
+                  style={{ ...inputStyle, resize: 'none' }}
                 />
               </div>
 
