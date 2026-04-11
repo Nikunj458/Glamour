@@ -141,13 +141,13 @@ export default function Contact() {
               <p className="font-sans font-medium text-xs text-charcoal">Call Us</p>
               <p className="font-sans text-[11px] text-mink">+91 99778 03404</p>
             </a>
-            <a href="mailto:glamourboutique01@gmail.com"
+            <a href="mailto:glamourboutique013@gmail.com"
               className="flex flex-col items-center gap-2 bg-white border border-gray-100 p-4 text-center active:bg-champagne/40 transition-colors">
               <div className="w-10 h-10 bg-rose/10 rounded-full flex items-center justify-center">
                 <Mail size={18} className="text-rose" />
               </div>
               <p className="font-sans font-medium text-xs text-charcoal">Email</p>
-              <p className="font-sans text-[11px] text-mink truncate w-full text-center">glamourboutique01@gmail.com</p>
+              <p className="font-sans text-[11px] text-mink truncate w-full text-center">glamourboutique013@gmail.com</p>
             </a>
           </div>
 
