@@ -234,14 +234,32 @@ export default function Contact() {
                 />
               </div>
 
-              <button
-                type="submit" disabled={sending}
-                className="btn-primary w-full flex items-center justify-center gap-2"
-              >
-                {sending ? (
-                  <><div className="w-4 h-4 border-2 border-ivory border-t-transparent rounded-full animate-spin" /> Sending...</>
-                ) : 'Send Message'}
-              </button>
+            <button
+  type="submit"
+  disabled={sending}
+  style={{
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+    background: sending ? '#8B6F68' : '#2C2C2C',
+    color: '#FAF7F2',
+    padding: '14px 24px',
+    fontFamily: 'inherit',
+    fontSize: '11px',
+    letterSpacing: '0.15em',
+    textTransform: 'uppercase',
+    border: 'none',
+    cursor: sending ? 'not-allowed' : 'pointer',
+    minHeight: '48px',
+    opacity: sending ? 0.7 : 1,
+  }}
+>
+  {sending ? (
+    <><div style={{ width: '16px', height: '16px', border: '2px solid #FAF7F2', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} /> Sending...</>
+  ) : 'Send Message'}
+</button>
             </form>
           </div>
 
