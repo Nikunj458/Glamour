@@ -36,21 +36,17 @@ function ArrowBtn({ dir, onClick }) {
         transition-all duration-200 group
         ${isLeft ? '-translate-x-3 left-0' : 'translate-x-3 right-0'}
       `}
-      style={{ background: '#FAF4EA', border: '1px solid #D4B8A8' }}
-      onMouseEnter={e => (e.currentTarget.style.borderColor = '#C17B6F')}
-      onMouseLeave={e => (e.currentTarget.style.borderColor = '#D4B8A8')}
+      style={{ background: 'transparent', border: 'none' }}
     >
       <svg
-        width="16" height="16" viewBox="0 0 16 16"
-        fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+        width="20" height="20" viewBox="0 0 20 20"
+        fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
         className="transition-colors duration-200"
-        style={{ stroke: '#8C6B60' }}
-        onMouseEnter={e => (e.currentTarget.style.stroke = '#C17B6F')}
-        onMouseLeave={e => (e.currentTarget.style.stroke = '#8C6B60')}
+        style={{ stroke: '#fff', filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.55))' }}
       >
         {isLeft
-          ? <path d="M10 3L5 8l5 5" />
-          : <path d="M6 3l5 5-5 5" />}
+          ? <path d="M13 4L7 10l6 6" />
+          : <path d="M7 4l6 6-6 6" />}
       </svg>
     </button>
   );
