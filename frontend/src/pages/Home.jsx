@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import api from '../utils/api';
 import ProductCard from '../components/common/ProductCard';
 import { ProductSkeleton } from '../components/common/Skeletons';
@@ -23,6 +23,40 @@ const CAT_IMAGES = {
 const FALLBACK_IMG  = 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=400&q=80';
 const FALLBACK_DESC = 'Explore';
 
+/* ── Reusable elegant arrow button ─────────────────────────── */
+function ArrowBtn({ dir, onClick }) {
+  const isLeft = dir === 'left';
+  return (
+    <button
+      onClick={onClick}
+      aria-label={isLeft ? 'Scroll left' : 'Scroll right'}
+      className={`
+        absolute top-[42%] -translate-y-1/2 z-10
+        w-9 h-9 flex items-center justify-center
+        transition-all duration-200 group
+        ${isLeft ? '-translate-x-3 left-0' : 'translate-x-3 right-0'}
+      `}
+      style={{ background: '#FAF4EA', border: '1px solid #D4B8A8' }}
+      onMouseEnter={e => (e.currentTarget.style.borderColor = '#C17B6F')}
+      onMouseLeave={e => (e.currentTarget.style.borderColor = '#D4B8A8')}
+    >
+      <svg
+        width="16" height="16" viewBox="0 0 16 16"
+        fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+        className="transition-colors duration-200"
+        style={{ stroke: '#8C6B60' }}
+        onMouseEnter={e => (e.currentTarget.style.stroke = '#C17B6F')}
+        onMouseLeave={e => (e.currentTarget.style.stroke = '#8C6B60')}
+      >
+        {isLeft
+          ? <path d="M10 3L5 8l5 5" />
+          : <path d="M6 3l5 5-5 5" />}
+      </svg>
+    </button>
+  );
+}
+
+/* ── Featured section ───────────────────────────────────────── */
 function FeaturedSection({ storyRef, loading, featured, newest }) {
   const scrollRef = useRef(null);
   const [scrollState, setScrollState] = useState({ left: false, right: true });
@@ -31,8 +65,8 @@ function FeaturedSection({ storyRef, loading, featured, newest }) {
     const el = scrollRef.current;
     if (!el) return;
     setScrollState({
-      left:  el.scrollLeft > 0,
-      right: el.scrollLeft < el.scrollWidth - el.clientWidth - 1,
+      left:  el.scrollLeft > 2,
+      right: el.scrollLeft < el.scrollWidth - el.clientWidth - 2,
     });
   };
 
@@ -71,15 +105,7 @@ function FeaturedSection({ storyRef, loading, featured, newest }) {
       </div>
 
       <div className="relative">
-        {scrollState.left && (
-          <button
-            onClick={() => scroll('left')}
-            className="absolute left-0 top-[40%] -translate-y-1/2 -translate-x-1 z-10 w-9 h-9 bg-ivory border border-gray-200 shadow-md flex items-center justify-center text-charcoal hover:bg-champagne hover:border-rose transition-all active:scale-90"
-            aria-label="Scroll left"
-          >
-            <ChevronLeft size={18} />
-          </button>
-        )}
+        {scrollState.left  && <ArrowBtn dir="left"  onClick={() => scroll('left')}  />}
 
         <div ref={scrollRef} className="flex gap-3 overflow-x-auto no-scrollbar pb-2 ml-[-4px]">
           {items.map((p, i) =>
@@ -89,38 +115,30 @@ function FeaturedSection({ storyRef, loading, featured, newest }) {
           )}
         </div>
 
-        {scrollState.right && (
-          <button
-            onClick={() => scroll('right')}
-            className="absolute right-0 top-[40%] -translate-y-1/2 translate-x-1 z-10 w-9 h-9 bg-ivory border border-gray-200 shadow-md flex items-center justify-center text-charcoal hover:bg-champagne hover:border-rose transition-all active:scale-90"
-            aria-label="Scroll right"
-          >
-            <ChevronRight size={18} />
-          </button>
-        )}
+        {scrollState.right && <ArrowBtn dir="right" onClick={() => scroll('right')} />}
       </div>
     </section>
   );
 }
 
+/* ── Home page ──────────────────────────────────────────────── */
 export default function Home() {
   const [heroIdx, setHeroIdx]       = useState(0);
   const [featured, setFeatured]     = useState([]);
   const [newest, setNewest]         = useState([]);
   const [loading, setLoading]       = useState(true);
   const [categories, setCategories] = useState([]);
-  const featuredRef   = useRef(null);
-  const touchStartX   = useRef(null);
-  const catScrollRef  = useRef(null);
+  const touchStartX  = useRef(null);
+  const catScrollRef = useRef(null);
+  const storyRef     = useRef(null);
   const [catScrollState, setCatScrollState] = useState({ left: false, right: true });
-  const storyRef = useRef(null);
 
   const updateCatScroll = () => {
     const el = catScrollRef.current;
     if (!el) return;
     setCatScrollState({
-      left:  el.scrollLeft > 0,
-      right: el.scrollLeft < el.scrollWidth - el.clientWidth - 1,
+      left:  el.scrollLeft > 2,
+      right: el.scrollLeft < el.scrollWidth - el.clientWidth - 2,
     });
   };
 
@@ -149,10 +167,13 @@ export default function Home() {
   }, []);
 
   const onTouchStart = e => { touchStartX.current = e.touches[0].clientX; };
-  const onTouchEnd = e => {
+  const onTouchEnd   = e => {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) setHeroIdx(i => diff > 0 ? (i + 1) % HERO_IMAGES.length : (i - 1 + HERO_IMAGES.length) % HERO_IMAGES.length);
+    if (Math.abs(diff) > 40)
+      setHeroIdx(i => diff > 0
+        ? (i + 1) % HERO_IMAGES.length
+        : (i - 1 + HERO_IMAGES.length) % HERO_IMAGES.length);
     touchStartX.current = null;
   };
 
@@ -168,6 +189,16 @@ export default function Home() {
       } finally { setLoading(false); }
     })();
   }, []);
+
+  const scrollCat = (dir) => {
+    const el = catScrollRef.current;
+    if (!el) return;
+    const cardW = 156;
+    const target = dir === 'right'
+      ? (Math.floor(el.scrollLeft / cardW) + 1) * cardW
+      : Math.max(0, Math.floor((el.scrollLeft - 1) / cardW) * cardW);
+    el.scrollTo({ left: target, behavior: 'smooth' });
+  };
 
   return (
     <div className="overflow-x-hidden">
@@ -200,7 +231,8 @@ export default function Home() {
               className="flex-1 sm:flex-none text-center btn-primary py-3 px-3 bg-ivory text-charcoal flex items-center justify-center gap-2">
               Shop Now <ArrowRight size={14} />
             </Link>
-            <Link onClick={() => storyRef.current.scrollIntoView({ behavior: 'smooth' })}
+            <Link
+              onClick={() => storyRef.current?.scrollIntoView({ behavior: 'smooth' })}
               className="flex-1 sm:flex-none text-center btn-outline border-ivory/70 text-ivory flex items-center justify-center">
               Featured
             </Link>
@@ -226,55 +258,51 @@ export default function Home() {
             All <ArrowRight size={12} />
           </Link>
         </div>
+
         <div className="relative">
-          {catScrollState.left && (
-            <button
-              onClick={() => {
-                const el = catScrollRef.current;
-                if (!el) return;
-                const cardW = 156;
-                const target = Math.floor((el.scrollLeft - 1) / cardW) * cardW;
-                el.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
-              }}
-              className="absolute left-0 top-[40%] -translate-y-1/2 -translate-x-1 z-10 w-9 h-9 bg-ivory border border-gray-200 shadow-md flex items-center justify-center text-charcoal hover:bg-champagne hover:border-rose transition-all active:scale-90"
-              aria-label="Scroll left"
-            >
-              <ChevronLeft size={18} />
-            </button>
-          )}
+          {catScrollState.left  && <ArrowBtn dir="left"  onClick={() => scrollCat('left')}  />}
 
           <div ref={catScrollRef} className="flex gap-3 overflow-x-auto no-scrollbar pb-2 ml-[-4px]">
             {categories.map(cat => {
               const meta   = CAT_IMAGES[cat.name] || { img: FALLBACK_IMG, desc: FALLBACK_DESC };
               const imgSrc = cat.image?.url || meta.img;
               return (
-                <Link key={cat.name} to={`/collections/${cat.name.toLowerCase()}`}
-                  className="flex-shrink-0 w-36 md:w-44 group">
-                  <div className="aspect-[3/4] overflow-hidden bg-gray-100 mb-1.5">
-                    <img src={imgSrc} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <Link
+                  key={cat.name}
+                  to={`/collections/${cat.name.toLowerCase()}`}
+                  className="flex-shrink-0 w-36 md:w-44 group"
+                >
+                  {/* Image with overlay label */}
+                  <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
+                    <img
+                      src={imgSrc}
+                      alt={cat.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {/* Dark gradient overlay */}
+                    <div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{ background: 'linear-gradient(to top, rgba(20,12,6,0.78) 0%, rgba(20,12,6,0.10) 50%, transparent 100%)' }}
+                    />
+                    {/* Text overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 px-3 pb-3 pt-8">
+                      <p className="font-display text-sm text-ivory leading-tight">
+                        {cat.name}
+                      </p>
+                      <p
+                        className="font-sans text-[9px] tracking-widest uppercase mt-0.5"
+                        style={{ color: 'rgba(255,255,255,0.62)' }}
+                      >
+                        {cat.description || meta.desc}
+                      </p>
+                    </div>
                   </div>
-                  <p className="font-display text-sm text-charcoal text-center leading-tight">{cat.name}</p>
-                  <p className="text-[10px] font-sans text-mink text-center">{cat.description || meta.desc}</p>
                 </Link>
               );
             })}
           </div>
 
-          {catScrollState.right && (
-            <button
-              onClick={() => {
-                const el = catScrollRef.current;
-                if (!el) return;
-                const cardW = 156;
-                const target = (Math.floor(el.scrollLeft / cardW) + 1) * cardW;
-                el.scrollTo({ left: target, behavior: 'smooth' });
-              }}
-              className="absolute right-0 top-[40%] -translate-y-1/2 translate-x-1 z-10 w-9 h-9 bg-ivory border border-gray-200 shadow-md flex items-center justify-center text-charcoal hover:bg-champagne hover:border-rose transition-all active:scale-90"
-              aria-label="Scroll right"
-            >
-              <ChevronRight size={18} />
-            </button>
-          )}
+          {catScrollState.right && <ArrowBtn dir="right" onClick={() => scrollCat('right')} />}
         </div>
       </section>
 
@@ -440,6 +468,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── CTA BANNER ────────────────────────────── */}
       <div style={{ backgroundColor: '#faf4eafd' }} className="border-b border-white/10 px-4 py-10 text-center">
         <p className="tag text-zinc-700 mb-2 tracking-[0.3em] text-[10px] uppercase">New Season. New You.</p>
         <h3 className="font-display text-3xl italic text-rose mb-3">Dress to be Remembered</h3>
@@ -453,6 +482,7 @@ export default function Home() {
           Explore Collections
         </Link>
       </div>
+
     </div>
   );
 }
