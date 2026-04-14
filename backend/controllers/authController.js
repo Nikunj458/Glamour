@@ -13,7 +13,7 @@ const sendBrevoEmail = async ({ to, toName, subject, html }) => {
       'api-key':      process.env.BREVO_API_KEY,
     },
     body: JSON.stringify({
-      sender:      { name: 'Glamour Boutique', email: 'glamourboutique01@gmail.com' },
+      sender:      { name: 'Glamour Boutique', email: 'glamourboutique013@gmail.com' },
       to:          [{ email: to, name: toName }],
       subject,
       htmlContent: html,
